@@ -1,0 +1,6 @@
+{
+  "port": 8000,
+  "accessTokenExpiresIn": 30,
+  "refreshTokenExpiresIn": 720,
+  "origin": "http://localhost:8000"
+}
