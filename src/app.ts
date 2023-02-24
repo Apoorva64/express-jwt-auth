@@ -7,7 +7,6 @@ import cookieParser from 'cookie-parser'
 import connectDB from './utils/connectDB'
 import userRouter from './routes/user.route'
 import authRouter from './routes/auth.route'
-import asyncHandler from 'express-async-handler'
 
 const app = express()
 
@@ -40,6 +39,7 @@ app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
     status: 'success',
     message: 'Server is up and running'
   })
+  next()
 })
 // UnKnown Routes
 
@@ -66,5 +66,8 @@ const port = config.get<number>('port')
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`)
   // ? call the connectDB function here
-  asyncHandler(connectDB)
+  connectDB().catch((error: any) => {
+    console.log(error.message)
+  }
+  )
 })
