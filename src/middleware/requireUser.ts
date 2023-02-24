@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import AppError from '../utils/appError'
-import { type User } from '../models/user.model'
+import { type JWTPayload } from '../services/jwt.service'
 
 export const requireUser = (
   req: Request,
@@ -8,7 +8,7 @@ export const requireUser = (
   next: NextFunction
 ): undefined => {
   try {
-    const user: User | null = res.locals.user
+    const user: JWTPayload | null = res.locals.user
     if (user == null) {
       next(new AppError('Invalid token or session has expired', 401)); return
     }

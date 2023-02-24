@@ -3,8 +3,9 @@
 # This script is used to start the application
 # generate ssh keys
 
-ssh-keygen -t rsa -b 2048 -m PEM -f keys/rsa.key -N ""
-openssl rsa -in keys/rsa.key -pubout -outform PEM -out keys/rsa.key.pub
+openssl genrsa -out keys/keypair.pem 2048
+openssl rsa -in keys/keypair.pem -pubout -out keys/publickey.crt
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keys/keypair.pem -out keys/pkcs8.key
 
 # start the application
 yarn prod

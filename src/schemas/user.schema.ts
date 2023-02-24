@@ -28,7 +28,7 @@ export const loginUserSchema = object({
   })
 })
 
-export const updateUserSchema = object({
+export const patchUserSchema = object({
   body: object({
     username: optional(string({ required_error: 'Username is required' })),
     email: optional(string({ required_error: 'Email is required' }).email(
@@ -41,7 +41,7 @@ export const updateUserSchema = object({
   })
 })
 
-export const updatePasswordSchema = object({
+export const changeUserPasswordSchema = object({
   body: object({
     currentPassword: string({ required_error: 'Current password is required' }),
     newPassword: string({ required_error: 'New password is required' })
@@ -95,8 +95,8 @@ export const refreshTokenSchema = object({
 
 export type RefreshTokenSchema = TypeOf<typeof refreshTokenSchema>
 export type CreateUserSchema = TypeOf<typeof createUserSchema>
-export type UpdateUserSchema = TypeOf<typeof updateUserSchema>
-export type UpdatePasswordSchema = TypeOf<typeof updatePasswordSchema>
+export type PatchUserSchema = TypeOf<typeof patchUserSchema>
+export type ChangeUserPasswordSchema = TypeOf<typeof changeUserPasswordSchema>
 export type DeleteUserSchema = TypeOf<typeof deleteUserSchema>
 export type GetUserByIdSchema = TypeOf<typeof getUserByIdSchema>
 export type RegisterUserSchema = TypeOf<typeof registerUserSchema>

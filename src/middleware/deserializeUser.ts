@@ -2,6 +2,7 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { findUserById } from '../services/user.service'
 import AppError from '../utils/appError'
 import { verifyJwt } from '../utils/jwt'
+import { type JWTPayload } from '../services/jwt.service'
 
 export const deserializeUser = async (
   req: Request,
@@ -22,7 +23,7 @@ export const deserializeUser = async (
     }
 
     // Validate Access Token
-    const decoded = verifyJwt<{ sub: string }>(accessToken)
+    const decoded = verifyJwt<JWTPayload>(accessToken)
 
     if (decoded == null) {
       next(new AppError('Invalid token or user doesn\'t exist', 401)); return
@@ -37,7 +38,7 @@ export const deserializeUser = async (
 
     // This is really important (Helps us know if the user is logged in from other controllers)
     // You can do: (req.user or res.locals.user)
-    res.locals.user = user
+    res.locals.user = decoded
 
     next()
   } catch (err: any) {

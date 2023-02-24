@@ -1,9 +1,6 @@
 import { omit } from 'lodash'
 import { type FilterQuery, type QueryOptions } from 'mongoose'
-import config from 'config'
 import userModel, { type User } from '../models/user.model'
-import { signJwt } from '../utils/jwt'
-import { type DocumentType } from '@typegoose/typegoose'
 
 // Exclude this fields from the response
 export const excludedFields = ['password']
@@ -38,41 +35,12 @@ export const findUser = async (
 
 // Update User
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const updateUser = async (id: string, update: Partial<User>) => {
-  return omit(userModel.updateOne({ id }, update).lean(), excludedFields)
+export const patchUser = async (_id: string, update: Partial<User>) => {
+  return omit(userModel.updateOne({ _id }, [{ $set: update }]).lean(), excludedFields)
 }
 
 // Delete User
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const deleteUserById = async (id: string) => {
-  return omit(userModel.deleteOne({ id }).lean(), excludedFields)
-}
-
-// Sign Token
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const signToken = async (user: DocumentType<User>) => {
-  // Sign the access token
-  const accessToken = signJwt(
-    {
-      sub: user._id,
-      type: 'access'
-    },
-    {
-      expiresIn: `${config.get<number>('accessTokenExpiresIn')}m`
-    }
-  )
-
-  const refreshToken = signJwt(
-    {
-      sub: user._id,
-      type: 'refresh'
-
-    },
-    {
-      expiresIn: `${config.get<number>('refreshTokenExpiresIn')}m`
-    }
-  )
-
-  // Return access token
-  return { accessToken, refreshToken }
+export const deleteUserById = async (_id: string) => {
+  return omit(userModel.deleteOne({ _id }).lean(), excludedFields)
 }

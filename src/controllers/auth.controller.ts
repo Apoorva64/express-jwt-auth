@@ -1,9 +1,10 @@
 import config from 'config'
 import { type CookieOptions, type NextFunction, type Request, type Response } from 'express'
 import { type RegisterUserSchema, type LoginUserSchema, type RefreshTokenSchema } from '../schemas/user.schema'
-import { createUser, findUser, signToken } from '../services/user.service'
+import { createUser, findUser } from '../services/user.service'
 import AppError from '../utils/appError'
 import { verifyJwt } from '../utils/jwt'
+import { type JWTPayload, signToken } from '../services/jwt.service'
 
 // Cookie options
 const accessTokenCookieOptions: CookieOptions = {
@@ -101,7 +102,7 @@ export const refreshTokenHandler = async (
 ): Promise<void> => {
   try {
     // verify the refresh token
-    const decoded = verifyJwt<{ sub: string, exp: string }>(req.body.refreshToken)
+    const decoded = verifyJwt<JWTPayload>(req.body.refreshToken)
 
     if (decoded == null) {
       next(new AppError('Invalid refresh token', 401))

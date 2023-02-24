@@ -1,11 +1,21 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { createUser, findAllUsers, findUserById, updateUser, deleteUserById } from '../services/user.service'
+import {
+  createUser,
+  findAllUsers,
+  findUserById,
+  patchUser,
+  deleteUserById,
+  findUser,
+  excludedFields
+} from '../services/user.service'
 import {
   type CreateUserSchema,
   type GetUserByIdSchema,
   type RegisterUserSchema,
-  type UpdateUserSchema
+  type PatchUserSchema, type ChangeUserPasswordSchema
 } from '../schemas/user.schema'
+import AppError from '../utils/appError'
+import { omit } from 'lodash'
 
 export const getAllUsersHandler = async (
   req: Request<unknown, unknown, RegisterUserSchema['body']>,
@@ -40,8 +50,8 @@ export const getUserByIdHandler = async (
   }
 }
 
-export const putUserHandler = async (
-  req: Request<UpdateUserSchema['params'], unknown, UpdateUserSchema['body']>,
+export const patchUserHandler = async (
+  req: Request<PatchUserSchema['params'], unknown, PatchUserSchema['body']>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -49,7 +59,7 @@ export const putUserHandler = async (
   const id = req.params.id
   try {
     // Edit the user
-    const user = await updateUser(id, req.body)
+    const user = await patchUser(id, omit(req.body, ['password']))
     // Send the user object
     res.send(user)
   } catch (err: any) {
@@ -103,6 +113,31 @@ export const createNewUserHandler = async (
       })
       return
     }
+    next(err)
+  }
+}
+
+export const changeUserPasswordHandler = async (
+  req: Request<unknown, unknown, ChangeUserPasswordSchema['body']>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // verify old password
+    const user = await findUser({ _id: res.locals.user.sub })
+    if (user == null) {
+      next(new AppError('User with that token no longer exist', 401))
+      return
+    }
+    if (!(await user.comparePasswords(user.password, req.body.currentPassword))) {
+      next(new AppError('Old password is incorrect', 401))
+      return
+    }
+    // change password
+    user.password = req.body.newPassword
+    const updatedUser = omit((await user.save()).toJSON(), excludedFields)
+    res.send(updatedUser)
+  } catch (err: any) {
     next(err)
   }
 }
