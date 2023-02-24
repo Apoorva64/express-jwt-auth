@@ -102,14 +102,11 @@ export const refreshTokenHandler = async (
   try {
     // verify the refresh token
     const decoded = verifyJwt<{ sub: string, exp: string }>(req.body.refreshToken)
-    console.log(decoded)
 
     if (decoded == null) {
       next(new AppError('Invalid refresh token', 401))
       return
     }
-    console.log(decoded.exp)
-    console.log(Date.now() / 1000)
     // check if the user still exist
     const user = await findUser({ id: decoded.sub })
 
