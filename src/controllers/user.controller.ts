@@ -17,6 +17,8 @@ import AppError from '../utils/appError'
 import { omit } from 'lodash'
 import { findPermission } from '../services/permission.service'
 import { type JWTPayload } from '../services/jwt.service'
+import { type Permission } from '../models/permission.model'
+import { type Ref } from '@typegoose/typegoose'
 
 export const getAllUsersHandler = async (
   req: Request<unknown, unknown, unknown>,
@@ -59,7 +61,7 @@ export const patchUserHandler = async (
   // Get the ID from the url
   const id = req.params.id
   const jwtPayload: JWTPayload = res.locals.user
-  let permissions = []
+  let permissions: Array<Ref<Permission>> = []
   try {
     if (req.body.permissions != null) {
       if (!jwtPayload.permissions.includes('AuthEditUserPermissions')) {
