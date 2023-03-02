@@ -15,7 +15,7 @@ services:
       - '6000:27017'
 
   auth:
-    image: ghcr.io/apoorva64/express-jwt-auth/jwt-express-auth:latest
+    image: ghcr.io/apoorva64/express-jwt-auth/v1:latest
     container_name: auth
     build:
         context: .
