@@ -11,9 +11,7 @@
     "AuthReadSelfUser",
     "AuthUpdateSelfUser",
     "AuthDeleteSelfUser",
-    "AuthReadPermission",
-    "NeoReadPermission",
-    "NeoWritePermission"
+    "AuthReadPermission"
   ],
   "superAdminPermissions": [
     "AuthReadUser",
