@@ -15,7 +15,7 @@ services:
       - '6000:27017'
 
   auth:
-    image: apoorva64/express-auth:latest
+    image: ghcr.io/apoorva64/express-jwt-auth/jwt-express-auth:latest
     container_name: auth
     build:
         context: .
@@ -26,6 +26,7 @@ services:
       - '8000:8000'
     volumes:
       - ./keys:/usr/app/keys
+    entrypoint: ['./start.sh']
 volumes:
   mongo:
 

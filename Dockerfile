@@ -12,6 +12,8 @@ COPY . .
 
 RUN yarn build
 
+RUN chmod +x ./start.sh
+
 CMD ["./start.sh"]
 
 

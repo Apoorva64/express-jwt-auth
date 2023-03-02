@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # This script is used to start the application
 # generate ssh keys
