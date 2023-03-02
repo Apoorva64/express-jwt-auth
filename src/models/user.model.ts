@@ -12,7 +12,6 @@ import { Permission } from './permission.model'
 @pre<User>('save', async function () {
   // Hash password if the password is new or was updated
   if (!this.isModified('password')) return
-  console.error('Hashing password...')
   // Hash password with costFactor of 12
   // noinspection JSPotentiallyInvalidUsageOfClassThis
   this.set('password', await bcrypt.hash(this.password, 12))

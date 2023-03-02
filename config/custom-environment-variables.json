@@ -6,6 +6,5 @@
   "origin": "ORIGIN",
   "superAdminEmail": "SUPER_ADMIN_EMAIL",
   "superAdminPassword": "SUPER_ADMIN_PASSWORD",
-  "superAdminUsername": "SUPER_ADMIN_USERNAME",
-  "superAdminRole": "SUPER_ADMIN_ROLE"
+  "superAdminUsername": "SUPER_ADMIN_USERNAME"
 }
