@@ -3,15 +3,16 @@ import {
   index,
   modelOptions,
   pre,
-  prop
+  prop, type Ref
 } from '@typegoose/typegoose'
 import bcrypt from 'bcryptjs'
+import { Permission } from './permission.model'
 
 @index({ email: 1 })
 @pre<User>('save', async function () {
   // Hash password if the password is new or was updated
   if (!this.isModified('password')) return
-
+  console.error('Hashing password...')
   // Hash password with costFactor of 12
   // noinspection JSPotentiallyInvalidUsageOfClassThis
   this.set('password', await bcrypt.hash(this.password, 12))
@@ -31,11 +32,11 @@ export class User {
   @prop({ unique: true, required: true })
     email!: string
 
-  @prop({ required: true, minlength: 8, maxLength: 32, select: false })
+  @prop({ required: true, select: false })
     password!: string
 
-  @prop({ default: 'user' })
-    role!: string
+  @prop({ ref: () => Permission, type: () => [Permission] })
+    permissions!: Array<Ref<Permission>>
 
   // Instance method to check if passwords match
   async comparePasswords (hashedPassword: string, candidatePassword: string): Promise<boolean> {

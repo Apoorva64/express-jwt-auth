@@ -1,3 +1,11 @@
 {
-  "dbUrl": "MONGODB_URL"
+  "dbUrl": "MONGODB_URL",
+  "port": "PORT",
+  "accessTokenExpiresIn": "ACCESS_TOKEN_EXPIRES_IN",
+  "refreshTokenExpiresIn": "REFRESH_TOKEN_EXPIRES_IN",
+  "origin": "ORIGIN",
+  "superAdminEmail": "SUPER_ADMIN_EMAIL",
+  "superAdminPassword": "SUPER_ADMIN_PASSWORD",
+  "superAdminUsername": "SUPER_ADMIN_USERNAME",
+  "superAdminRole": "SUPER_ADMIN_ROLE"
 }

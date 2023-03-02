@@ -30,7 +30,7 @@ export const findUser = async (
   query: FilterQuery<User>,
   options: QueryOptions = {}
 ) => {
-  return await userModel.findOne(query, {}, options).select('+password')
+  return (await userModel.findOne(query, {}, options).select('+password'))
 }
 
 // Update User

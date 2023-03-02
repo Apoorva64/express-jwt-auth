@@ -5,6 +5,7 @@ import { createUser, findUser } from '../services/user.service'
 import AppError from '../utils/appError'
 import { verifyJwt } from '../utils/jwt'
 import { type JWTPayload, signToken } from '../services/jwt.service'
+import { findPermission } from '../services/permission.service'
 
 // Cookie options
 const accessTokenCookieOptions: CookieOptions = {
@@ -39,7 +40,8 @@ export const registerHandler = async (
     const user = await createUser({
       email: req.body.email,
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      permissions: await findPermission({ title: { $in: config.get<string[]>('defaultUserPermissions') } })
     })
 
     res.send(user)

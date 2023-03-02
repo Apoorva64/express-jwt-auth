@@ -21,11 +21,9 @@ services:
         context: .
         dockerfile: Dockerfile
     environment:
-      - MONGODB_URL=mongodb://auth:password123@mongo:6000/auth?authSource=admin
-
+      - MONGODB_URL=mongodb://auth:password123@mongo:27017/auth?authSource=admin
     ports:
       - '8000:8000'
-
     volumes:
       - ./keys:/usr/app/keys
 volumes:

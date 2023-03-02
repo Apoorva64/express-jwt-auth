@@ -34,7 +34,9 @@ export const patchUserSchema = object({
     email: optional(string({ required_error: 'Email is required' }).email(
       'Invalid email'
     )),
-    role: optional(string({ required_error: 'Role is required' }))
+    permissions: optional(
+      string({ required_error: 'Permissions are required' }).array()
+    )
   }),
   params: object({
     id: string({ required_error: 'User id is required' })
@@ -79,7 +81,7 @@ export const createUserSchema = object({
       .min(8, 'Password must be more than 8 characters')
       .max(32, 'Password must be less than 32 characters'),
     passwordConfirm: string({ required_error: 'Please confirm your password' }),
-    role: string({ required_error: 'Role is required' })
+    permissions: string({ required_error: 'Permissions are required' }).array()
   }).refine((data) => data.password === data.passwordConfirm, {
     path: ['passwordConfirm'],
     message: 'Passwords do not match'

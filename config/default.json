@@ -3,8 +3,86 @@
   "accessTokenExpiresIn": 30,
   "refreshTokenExpiresIn": 720,
   "origin": "http://localhost:8000",
-  "superAdminEmail": "admin@localhost",
+  "superAdminEmail": "admin@localhost.com",
   "superAdminPassword": "superSecretPassword",
   "superAdminUsername": "Admin",
-  "superAdminRole": "superAdmin"
+  "superAdminRole": "superAdmin",
+  "defaultUserPermissions": [
+    "AuthReadSelfUser",
+    "AuthUpdateSelfUser",
+    "AuthDeleteSelfUser",
+    "AuthReadPermission",
+    "NeoReadPermission",
+    "NeoWritePermission"
+  ],
+  "superAdminPermissions": [
+    "AuthReadUser",
+    "AuthCreateUser",
+    "AuthUpdateUser",
+    "AuthDeleteUser",
+    "AuthReadPermission",
+    "AuthUpdatePermission",
+    "AuthDeletePermission",
+    "AuthEditUserPermissions",
+    "NeoReadPermission",
+    "NeoWritePermission"
+  ],
+  "defaultPermissions": [
+    {
+      "title": "AuthReadUser",
+      "description": "Read user"
+    },
+    {
+      "title": "AuthCreateUser",
+      "description": "Create user"
+    },
+    {
+      "title": "AuthUpdateUser",
+      "description": "Update user"
+    },
+    {
+      "title": "AuthDeleteUser",
+      "description": "Delete user"
+    },
+    {
+      "title": "AuthReadSelfUser",
+      "description": "Read self user"
+    },
+    {
+      "title": "AuthUpdateSelfUser",
+      "description": "Update self user"
+    },
+    {
+      "title": "AuthDeleteSelfUser",
+      "description": "Delete self user"
+    },
+    {
+      "title": "AuthReadPermission",
+      "description": "Read permission"
+    },
+    {
+      "title": "AuthUpdatePermission",
+      "description": "Update permission"
+    },
+    {
+      "title": "AuthDeletePermission",
+      "description": "Delete permission"
+    },
+    {
+      "title": "AuthEditUserPermissions",
+      "description": "Edit user permissions"
+    },
+    {
+      "title": "testPermission",
+      "description": "Test permission"
+    },
+    {
+      "title": "NeoReadPermission",
+      "description": "Read Access to Neo4j"
+    },
+    {
+      "title": "NeoWritePermission",
+      "description": "Write Access to Neo4j"
+    }
+  ]
 }

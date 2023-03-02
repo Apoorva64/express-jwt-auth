@@ -17,8 +17,7 @@ import {
 } from '../schemas/user.schema'
 import { deserializeUser } from '../middleware/deserializeUser'
 import { requireUser } from '../middleware/requireUser'
-import { restrictTo, restrictToOrIsSelf } from '../middleware/restrictTo'
-import config from 'config'
+import { hasPermission } from '../middleware/hasPermission'
 
 const userRouter = express.Router()
 
@@ -27,30 +26,30 @@ userRouter.use(asyncHandler(deserializeUser), asyncHandler(requireUser))
 // Register user route
 userRouter.post('/',
   validate(createUserSchema),
-  asyncHandler(restrictTo(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthCreateUser')),
   asyncHandler(createNewUserHandler))
 
 userRouter.get('/',
-  asyncHandler(restrictTo(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthReadUser')),
   asyncHandler(getAllUsersHandler))
 
 // get user by id route
 userRouter.get('/:id', validate(getUserByIdSchema),
-  asyncHandler(restrictToOrIsSelf(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthReadUser', 'AuthSelfReadUser')),
   asyncHandler(getUserByIdHandler))
 
 // put user by id route
 userRouter.patch('/:id', validate(patchUserSchema),
-  asyncHandler(restrictToOrIsSelf(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthUpdateUser', 'AuthSelfUpdateUser')),
   asyncHandler(patchUserHandler))
 
 // delete user by id route
 userRouter.delete('/:id', validate(deleteUserSchema),
-  asyncHandler(restrictToOrIsSelf(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthDeleteUser', 'AuthSelfDeleteUser')),
   asyncHandler(deleteUserHandler))
 
 // change password route
 userRouter.post('/:id/change-password', validate(changeUserPasswordSchema),
-  asyncHandler(restrictToOrIsSelf(config.get<string>('superAdminRole'))),
+  asyncHandler(hasPermission(false, 'AuthChangePassword', 'AuthSelfChangePassword')),
   asyncHandler(changeUserPasswordHandler))
 export default userRouter

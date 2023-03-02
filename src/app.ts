@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser'
 import connectDB from './utils/connectDB'
 import userRouter from './routes/user.route'
 import authRouter from './routes/auth.route'
+import { publicKey } from './utils/jwt'
+import permissionRouter from './routes/permission.route'
 
 const app = express()
 
@@ -30,10 +32,10 @@ app.use(
 )
 // 5. Routes
 app.use('/api/auth', authRouter)
-
 app.use('/api/users', userRouter)
-// Testing
+app.use('/api/permissions', permissionRouter)
 
+// Testing
 app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     status: 'success',
@@ -41,8 +43,15 @@ app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
   })
   next()
 })
-// UnKnown Routes
 
+// serve public JWT key for verification
+app.get('/api/jwt-public-key', (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).send(publicKey)
+  next()
+}
+)
+
+// Unknown Routes
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any
   err.statusCode = 404

@@ -11,14 +11,15 @@ import {
 import {
   type CreateUserSchema,
   type GetUserByIdSchema,
-  type RegisterUserSchema,
   type PatchUserSchema, type ChangeUserPasswordSchema
 } from '../schemas/user.schema'
 import AppError from '../utils/appError'
 import { omit } from 'lodash'
+import { findPermission } from '../services/permission.service'
+import { type JWTPayload } from '../services/jwt.service'
 
 export const getAllUsersHandler = async (
-  req: Request<unknown, unknown, RegisterUserSchema['body']>,
+  req: Request<unknown, unknown, unknown>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -57,9 +58,35 @@ export const patchUserHandler = async (
 ): Promise<void> => {
   // Get the ID from the url
   const id = req.params.id
+  const jwtPayload: JWTPayload = res.locals.user
+  let permissions = []
   try {
+    if (req.body.permissions != null) {
+      if (!jwtPayload.permissions.includes('AuthEditUserPermissions')) {
+        res.status(403).json({
+          status: 'fail',
+          message: 'You are not allowed to change user permissions'
+        })
+        return
+      } else {
+        // hydrate body permissions with object id
+        permissions = (await findPermission({ title: { $in: req.body.permissions } }))?.map((permission) => permission._id)
+      }
+    }
+    let user
+    if (permissions.length > 0) {
+      user = await patchUser(id, {
+        email: req.body.email,
+        username: req.body.username,
+        permissions
+      })
+    } else {
+      user = await patchUser(id, {
+        email: req.body.email,
+        username: req.body.username
+      })
+    }
     // Edit the user
-    const user = await patchUser(id, omit(req.body, ['password']))
     // Send the user object
     res.send(user)
   } catch (err: any) {
@@ -101,7 +128,8 @@ export const createNewUserHandler = async (
       email: req.body.email,
       username: req.body.username,
       password: req.body.password,
-      role: req.body.role
+      permissions: (await findPermission({ title: { $in: req.body.permissions } }))?.map((permission) => permission._id)
+
     })
 
     res.send(user)
