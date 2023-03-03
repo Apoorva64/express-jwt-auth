@@ -14,7 +14,7 @@ export interface JWTPayload extends Record<string, unknown> {
 export const signToken = async (user: DocumentType<User>) => {
   await user.populate({ path: 'permissions', model: 'Permission' })
   const payload: JWTPayload = {
-    sub: user._id,
+    sub: user._id.toString(),
     type: 'access',
     // @ts-expect-error permissions is not a string
     permissions: user.permissions.map((permission) => permission.title)
