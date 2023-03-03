@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master # or the branch you want to trigger the build on
+    workflow_dispatch:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
