@@ -27,8 +27,13 @@ export const getAllUsersHandler = async (
 ): Promise<void> => {
   try {
     // Get users from database
-    const users = await findAllUsers()
-
+    let users = await findAllUsers()
+    users = await Promise.all(users.map(async (user) => {
+      // @ts-expect-error permissions is not a string
+      user.permissions = (await findPermission({ id: { $in: user.permissions } })).map((permission) => permission.title)
+      return user
+    }))
+    console.log(users)
     // Send the users object
     res.send(users)
   } catch (err: any) {
@@ -46,6 +51,8 @@ export const getUserByIdHandler = async (
   try {
     // Get the user from database
     const user = await findUserById(id)
+    // @ts-expect-error permissions is not a string
+    user.permissions = (await findPermission({ id: { $in: user.permissions } })).map((permission) => permission.title)
     // Send the user object
     res.send(user)
   } catch (err: any) {
@@ -131,9 +138,9 @@ export const createNewUserHandler = async (
       username: req.body.username,
       password: req.body.password,
       permissions: (await findPermission({ title: { $in: req.body.permissions } }))?.map((permission) => permission._id)
-
     })
-
+    // @ts-expect-error permissions is not a string
+    user.permissions = (await findPermission({ id: { $in: user.permissions } })).map((permission) => permission.title)
     res.send(user)
   } catch (err: any) {
     if (err.code === 11000) {

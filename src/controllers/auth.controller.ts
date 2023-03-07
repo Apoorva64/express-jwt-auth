@@ -43,7 +43,8 @@ export const registerHandler = async (
       password: req.body.password,
       permissions: await findPermission({ title: { $in: config.get<string[]>('defaultUserPermissions') } })
     })
-
+    // @ts-expect-error permissions is not a string
+    user.permissions = (await findPermission({ id: { $in: user.permissions } })).map((permission) => permission.title)
     res.send(user)
   } catch (err: any) {
     if (err.code === 11000) {
